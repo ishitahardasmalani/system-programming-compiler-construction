@@ -1,0 +1,143 @@
+// lexical.l
+%{
+int ke = 0, op = 0, va = 0, co = 0, se = 0, ch = 0;
+%}
+
+%%
+int|float|const { printf("Keyword: %s\n", yytext); ke++; }
+[+*\/=%-] { printf("Operator: %s\n", yytext); op++; }
+
+[0-9]+(\.[0-9]+)? { printf("Number: %s\n", yytext); co++; }
+[a-zA-Z][a-zA-Z0-9]* { printf("Variable: %s\n", yytext); va++; }
+[;,:](\s)* { printf("Separator: %s\n", yytext); se++; }
+
+%%
+
+int main()
+{
+    printf("\nENTER THE SEQUENCE\n");
+    yylex();
+    printf("Number of keywords: %d\n", ke);
+    printf("Number of operators: %d\n", op);
+    printf("Number of variables: %d\n", va);
+    printf("Number of numbers: %d\n", co);
+    printf("Number of separators: %d\n", se);
+    ch = ke + op + va + co + se;
+    printf("Total Number of tokens: %d\n", ch);
+    return 0;
+}
+
+
+//lines.l
+
+%{
+int c = 0;
+int l = 0;
+int s = 0;
+int w = 0;
+%}
+
+%%
+[\n] { l++; }
+[\t] { s++; }
+[a-zA-Z]+ { w++; c += strlen(yytext); }
+. { c++; }
+%%
+
+int yywrap() { return 1; }
+
+void main() {
+    printf("Enter a sentence: ");
+    yylex();
+    printf("\nCharacters: %d\n", c);
+    printf("Lines: %d\n", l);
+    printf("Tabs: %d\n", s);
+    printf("Words: %d\n", w);
+}
+
+
+//string.l
+%{
+void display(int);
+%}
+
+
+%%
+[a-zA-Z]+ {
+	int flag=1;
+	display(flag);
+	}
+	
+	 
+[0-9]+ {
+		int flag=2;
+		display(flag);
+}		
+.+ {
+	int flag=3;
+	display(flag);
+	}		
+%%
+
+void display(int flag){
+	if (flag==1)
+		printf("\nThe given string");
+		 
+	else if(flag==2)
+		printf("\nThe given number ");
+		
+	else
+		printf("The given string is either a digit or a word\n");	
+}
+
+void main()
+{
+	printf("\n Enter a string to check whether it is a word or a digit \n");
+	yylex();
+}
+					
+
+//vowel.l
+
+%{
+
+void display(int);
+
+%}
+
+
+%%
+[a|e|i|o|u|A|E|I|O|U]+ {
+
+	int flag=1;
+	display(flag);
+	}
+	
+	.+ {
+	
+		int flag=0;
+		display(flag);
+		}
+		
+%%
+
+void display(int flag)
+
+{
+	if (flag==0)
+		printf("\nThe given word is not a vowel\n");
+		
+	else
+		printf("\nThe given word is  a vowel\n");
+		
+}
+
+void main()
+{
+
+	printf("\n Enter something to check whether it is a vowel or not \n");
+	yylex();
+}
+					
+
+
